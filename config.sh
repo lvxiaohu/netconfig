@@ -112,20 +112,20 @@ function set_ntp {
         else
             echo "没有安装NTP客户端，即将使用Yum安装"
             yum install ntpdate -y
-        if [ $? -eq 0 ];then
-        echo ""
-        else
-            echo "NTP安装失败，请手动下载安装"
-        fi
+            if [ $? -eq 0 ];then
+            echo ""
+            else
+                echo "NTP安装失败，请手动下载安装"
+            fi
         fi
     echo -e "\033[34m 时间同步中...... \033[0m"
     ntpdate -u $ip_ntp > /dev/null
-    hwclock -w > /dev/null
-        if [ $? -eq 0 ]
-        then
+        if [ $? -eq 0 ] ;then
             echo -e "\033[32m 时间同步成功! \033[0m"
+            hwclock -w > /dev/null
             now_date=`date`
             echo -e "现在的时间为:( ${now_date} )"
+
         else
             echo -e "\033[31m 错误:时间同步失败,请检查NTP服务器是否正确 \033[0m"
         fi
@@ -144,13 +144,13 @@ function auto_set {
         fi
         restart_network
     else
+        set_ntp
         exit 1
     fi
 }
 
 function main {
     auto_set
-    set_ntp
 }
 
 main
