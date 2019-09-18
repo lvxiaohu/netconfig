@@ -2,9 +2,8 @@
 #! /bin/bash
 
 #获取真实网卡列表
-NetworkDevice=`nmcli device show|grep GENERAL.DEVICE:|awk '{print $2}'|grep "^e"|head -5|awk '$0=""NR". "$0'`
+NetworkDevice=`nmcli device show|egrep "GENERAL.DEVICE|GENERAL.设备"|awk '{print $2}'|grep "^e"|head -5|awk '$0=""NR". "$0'`
 
-#echo  -e """网卡信息:\n \033[32m ${NetworkDevice}\033[0m"""
 function network_chose {
     echo -e "开始配置网络..."
     printf "%-5s|%-10s\n" 网卡ID 网卡名称
@@ -154,3 +153,6 @@ function main {
 }
 
 main
+
+
+
