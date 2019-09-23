@@ -12,14 +12,15 @@ ${NetworkDevice} \033[0m
 ==============================="
 
     read -p  "选择你需要配置网卡(输入网卡ID 例：1 ):"  NetworkNum
-    if echo $NetworkNum | grep -q '[^0-9]'
-        then
-            echo -e "\033[32m 不是有效的网卡ID，请重新输入... \033[0m"
-            network_chose
-        else
-            chose_net_device=`echo "${NetworkDevice}"|sed -n "${NetworkNum}p"|awk '{print $2}'`
+    if [ ! -n "$NetworkNum" ]; then
+        echo -e "\033[32m  请输入正确的网卡ID, 请重新输入... \033[0m"
+        network_chose
+    elif [ $NetworkNum -gt 0 ] ; then
+        chose_net_device=`echo "${NetworkDevice}"|sed -n "${NetworkNum}p"|awk '{print $2}'`
+        echo -e "选择的网卡为：\033[32m ${chose_net_device} \033[0m"
+    else
+    exit 1
     fi
-    echo -e "配置的网卡文件为：\033[32m ${chose_net_device} \033[0m"
 }
 
 function check_ip {
@@ -135,7 +136,10 @@ function auto_set {
     read -p "即将进行网络配置，是否继续(y/n):" yn
     if [ "$yn" == "Y" ] || [ "$yn" == "y" ]; then
         network_chose
-        read -p "请选择IP配置方式,静态[Static]手动配置请输入:1 [DHCP]请输入:2  请选择(1/2):" chose_ip
+        read -p "请选择IP配置方式(默认Static)
+Static 手动配置请输入:1
+DHCP 自动获取请输入:2
+请选择(1/2):" chose_ip
         if [ "$chose_ip" == "2" ] ; then
             dhcp_network_set
             else
@@ -150,6 +154,7 @@ function auto_set {
 
 function main {
     auto_set
+    set_ntp
 }
 
 main
