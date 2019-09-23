@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#! /bin/bash
 
 #获取真实网卡列表
 NetworkDevice=`nmcli device show|egrep "GENERAL.DEVICE|GENERAL.设备"|awk '{print $2}'|grep "^e"|head -5|awk '$0=""NR". "$0'`
